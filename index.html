@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Zoomable Map</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    #map-container {
+      width: 100%;
+      height: 100%;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="map-container">
+    <object id="map" type="image/svg+xml" data="zoomable-map.svg"></object>
+  </div>
+
+  <!-- Load Panzoom Library -->
+  <script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
+  <script>
+    const objectElement = document.getElementById('map');
+
+    objectElement.addEventListener('load', () => {
+      const svgDoc = objectElement.contentDocument;
+      const svg = svgDoc.querySelector('svg');
+
+      const panzoom = Panzoom(svg, {
+        maxScale: 100,
+        minScale: 0
