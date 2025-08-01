@@ -1,40 +1,61 @@
-<script>
-  fetch('cultural-map.svg')
-    .then(response => response.text())
-    .then(svgText => {
-      const container = document.getElementById('svg-container');
-      container.innerHTML = svgText;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cultural Map Viewer</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+    }
+    #svg-container {
+      width: 100%; height: 100%; background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="svg-container">Loading...</div>
 
-      const svgElement = container.querySelector('svg');
-      if (!svgElement) {
-        container.innerText = "⚠️ SVG not found or invalid.";
-        return;
-      }
+  <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
 
-      svgElement.removeAttribute('width');
-      svgElement.removeAttribute('height');
-      svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  <script>
+    fetch('cultural-map.svg')
+      .then(res => res.text())
+      .then(svgText => {
+        const container = document.getElementById('svg-container');
+        container.innerHTML = svgText;
 
-      if (!svgElement.hasAttribute('viewBox')) {
-        const bbox = svgElement.getBBox();
-        svgElement.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
-      }
+        const svgElement = container.querySelector('svg');
+        if (!svgElement) {
+          container.innerText = "⚠️ SVG not found or invalid.";
+          return;
+        }
 
-      svgPanZoom(svgElement, {
-        zoomEnabled: true,
-        controlIconsEnabled: true,
-        fit: true,
-        center: true,
-        minZoom: 0.01,
-        maxZoom: 100,
-        zoomScaleSensitivity: 0.3,   /* <-- Updated here */
-        panEnabled: true
+        svgElement.removeAttribute('width');
+        svgElement.removeAttribute('height');
+        svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+        if (!svgElement.hasAttribute('viewBox')) {
+          const bbox = svgElement.getBBox();
+          svgElement.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
+        }
+
+        svgPanZoom(svgElement, {
+          zoomEnabled: true,
+          controlIconsEnabled: true,
+          fit: true,
+          center: true,
+          minZoom: 0.01,
+          maxZoom: 100,
+          zoomScaleSensitivity: 0.3,
+          panEnabled: true
+        });
+      })
+      .catch(e => {
+        document.getElementById('svg-container').innerText = '❌ Error loading SVG';
+        console.error(e);
       });
-    })
-    .catch(error => {
-      const container = document.getElementById('svg-container');
-      container.innerText = '❌ Error loading SVG.';
-      console.error(error);
-    });
-</script>
+  </script>
+</body>
+</html>
+
 
