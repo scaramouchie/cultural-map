@@ -9,19 +9,28 @@
       padding: 0;
       width: 100%;
       height: 100%;
+      background: #f2f2f2;
       overflow: hidden;
     }
 
     #svg-container {
       width: 100%;
       height: 100%;
+      background: #fff;
+      border: 2px solid #ccc;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div id="svg-container"></div>
+  <div id="svg-container">Loading SVG...</div>
 
-  <!-- svg-pan-zoom library -->
+  <!-- svg-pan-zoom -->
   <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
 
   <script>
@@ -29,16 +38,20 @@
 
     fetch(svgURL)
       .then(res => {
-        if (!res.ok) throw new Error("SVG not found!");
+        if (!res.ok) throw new Error("Failed to fetch SVG");
         return res.text();
       })
       .then(svgText => {
+        console.log("SVG loaded");
         const container = document.getElementById('svg-container');
         container.innerHTML = svgText;
 
         const svgElement = container.querySelector('svg');
 
-        if (!svgElement) throw new Error("No <svg> tag found!");
+        if (!svgElement) {
+          container.innerText = '⚠️ SVG element not found in response.';
+          return;
+        }
 
         svgElement.removeAttribute('width');
         svgElement.removeAttribute('height');
@@ -61,9 +74,11 @@
         });
       })
       .catch(err => {
-        document.getElementById('svg-container').innerText = "Error loading SVG: " + err.message;
+        const container = document.getElementById('svg-container');
+        container.innerText = "❌ Error loading SVG: " + err.message;
         console.error(err);
       });
   </script>
 </body>
 </html>
+
