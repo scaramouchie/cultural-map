@@ -5,10 +5,16 @@
   <title>Cultural Map Viewer</title>
   <style>
     html, body {
-      margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
     }
     #svg-container {
-      width: 100%; height: 100%; background: #fff;
+      width: 100%;
+      height: 100%;
+      background: #fff;
     }
   </style>
 </head>
@@ -19,7 +25,7 @@
 
   <script>
     fetch('cultural-map.svg')
-      .then(res => res.text())
+      .then(response => response.text())
       .then(svgText => {
         const container = document.getElementById('svg-container');
         container.innerHTML = svgText;
@@ -46,16 +52,14 @@
           center: true,
           minZoom: 0.01,
           maxZoom: 100,
-          zoomScaleSensitivity: 0.3,
+          zoomScaleSensitivity: 0.1,
           panEnabled: true
         });
       })
-      .catch(e => {
-        document.getElementById('svg-container').innerText = '❌ Error loading SVG';
-        console.error(e);
+      .catch(error => {
+        document.getElementById('svg-container').innerText = '❌ Error loading SVG.';
+        console.error(error);
       });
   </script>
 </body>
 </html>
-
-
