@@ -32,11 +32,11 @@
     obj.addEventListener('load', () => {
       const svg = obj.contentDocument.querySelector('svg');
       const panzoom = Panzoom(svg, {
-        maxScale: 10,
-        minScale: 0.1,
-        zoomSpeed: 0.07,
-        contain: 'outside'
-      });
+  maxScale: 50,   // Increase to zoom in more
+  minScale: 0.05, // Decrease to zoom out further
+  zoomSpeed: 0.07,
+  contain: 'outside'
+});
       svg.parentElement.addEventListener('wheel', panzoom.zoomWithWheel);
     });
   </script>
