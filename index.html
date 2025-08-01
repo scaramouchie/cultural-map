@@ -16,12 +16,6 @@
       width: 100%;
       height: 100%;
     }
-
-    svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
   </style>
 </head>
 <body>
@@ -34,19 +28,22 @@
     const svgURL = 'https://raw.githubusercontent.com/scaramouchie/cultural-map/main/cultural-map.svg';
 
     fetch(svgURL)
-      .then(response => response.text())
+      .then(res => {
+        if (!res.ok) throw new Error("SVG not found!");
+        return res.text();
+      })
       .then(svgText => {
         const container = document.getElementById('svg-container');
         container.innerHTML = svgText;
 
         const svgElement = container.querySelector('svg');
 
-        // Remove width/height and enforce responsive sizing
+        if (!svgElement) throw new Error("No <svg> tag found!");
+
         svgElement.removeAttribute('width');
         svgElement.removeAttribute('height');
         svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-        // Required: viewBox must exist for zoom/pan to work properly
         if (!svgElement.hasAttribute('viewBox')) {
           const bbox = svgElement.getBBox();
           svgElement.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
@@ -57,11 +54,15 @@
           controlIconsEnabled: true,
           fit: true,
           center: true,
-          minZoom: 0.01,     // Allow deep zoom out
-          maxZoom: 100,      // Allow deep zoom in
+          minZoom: 0.01,
+          maxZoom: 100,
           zoomScaleSensitivity: 0.1,
           panEnabled: true
         });
+      })
+      .catch(err => {
+        document.getElementById('svg-container').innerText = "Error loading SVG: " + err.message;
+        console.error(err);
       });
   </script>
 </body>
