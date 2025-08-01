@@ -1,49 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Cultural Map Viewer</title>
+  <meta charset="UTF-8" />
+  <title>Cultural Map Zoom</title>
   <style>
     html, body {
-      margin: 0;
-      height: 100%;
-      overflow: hidden;
+      margin: 0; height: 100%; overflow: hidden;
     }
-    #panzoom-container {
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-    }
-    #panzoom {
-      width: 100%;
-      height: 100%;
+    #container {
+      width: 100vw; height: 100vh;
     }
     svg {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
     }
   </style>
 </head>
 <body>
-  <div id="panzoom-container">
-    <object id="panzoom" type="image/svg+xml" data="cultural-map.svg"></object>
+  <div id="container">
+    <object id="svg-object" type="image/svg+xml" data="cultural-map.svg" style="width:100%; height:100%;"></object>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
   <script>
-    const object = document.getElementById("panzoom");
-
-    object.addEventListener("load", function () {
+    const object = document.getElementById('svg-object');
+    object.addEventListener('load', () => {
       const svgDoc = object.contentDocument;
-      const svg = svgDoc.querySelector("svg");
+      const svg = svgDoc.querySelector('svg');
       const panzoom = Panzoom(svg, {
-        maxScale: 50,
+        maxScale: 100,
         minScale: 0.01,
-        contain: "outside"
+        contain: 'outside',
+        zoomScaleSensitivity: 0.2
       });
-      svg.parentElement.addEventListener("wheel", panzoom.zoomWithWheel);
+      svg.parentElement.addEventListener('wheel', panzoom.zoomWithWheel);
     });
   </script>
 </body>
 </html>
-
